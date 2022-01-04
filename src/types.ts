@@ -1,8 +1,9 @@
 import { ImageSourcePropType } from "react-native";
 
 export type Cat = {
-  name: String;
-  dateOfBith: String;
+  id: number;
+  name: string;
+  dateOfBirth: string;
   alive: boolean;
   imagePath: ImageSourcePropType;
 };

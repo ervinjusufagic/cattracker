@@ -1,0 +1,18 @@
+{
+  "cats": [
+    {
+      "id": 1,
+      "name": "Burito",
+      "dateOfBirth": "2021-12-13",
+      "alive": "true",
+      "imagePath": "require('./Images/download.jpeg')"
+    },
+    {
+      "id": 2,
+      "name": "Bruno",
+      "dateOfBirth": "2021-11-20",
+      "alive": "true",
+      "image": "require('./Images/download.jpeg')"
+    }
+  ]
+}

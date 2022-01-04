@@ -3,7 +3,6 @@ import React from "react";
 import {
   ImageBackground,
   StyleSheet,
-  Text,
   useColorScheme,
   View,
 } from "react-native";
@@ -11,9 +10,12 @@ import {
 import LinearGradient from "react-native-linear-gradient";
 import { Cat } from "../types";
 import { Colors } from "../utils";
+import { AdaptableText } from "./AdaptableText";
 
-const CatCell = ({ name, dateOfBith, imagePath }: Cat) => {
+const CatCell = ({ cat }: { cat: Cat }) => {
+  const { name, dateOfBirth, imagePath } = cat;
   const isDarkMode = useColorScheme() === "dark";
+
   return (
     <View style={styles.cell}>
       <ImageBackground style={styles.catImage} source={imagePath}>
@@ -21,12 +23,8 @@ const CatCell = ({ name, dateOfBith, imagePath }: Cat) => {
           <LinearGradient
             style={styles.linearGradient}
             colors={["transparent", isDarkMode ? Colors.black : Colors.white]}>
-            <Text style={{ color: isDarkMode ? Colors.white : Colors.black }}>
-              {name}
-            </Text>
-            <Text style={{ color: isDarkMode ? Colors.white : Colors.black }}>
-              {dateOfBith}
-            </Text>
+            <AdaptableText>{name}</AdaptableText>
+            <AdaptableText>{dateOfBirth}</AdaptableText>
           </LinearGradient>
         </View>
       </ImageBackground>
