@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import {
   Button,
@@ -14,11 +14,14 @@ import {
 import { useQuery } from "react-query";
 
 import { Colors } from "./utils";
-import { Cat } from "./types";
 import { CatCell, AdaptableText } from "./components";
-import { fetchAllCats } from "./service/Api";
+import { fetchAllCats } from "./service/api";
+import { Cat } from "./types";
+import { StateContext } from "./store/stateContext";
 
 const CatTracker = () => {
+  const { state, dispatch } = useContext(StateContext);
+
   const isDarkMode = useColorScheme() === "dark";
 
   const backgroundStyle = {
@@ -66,13 +69,23 @@ const CatTracker = () => {
             ))}
           </View>
         </View>
+
+        {state.app.isAddModalOpen && <AdaptableText>Toggle this</AdaptableText>}
       </ScrollView>
       <View style={styles.actionMenu}>
         <TextInput
           style={{ color: isDarkMode ? Colors.white : Colors.black }}
           placeholder="Search for a cat..."
         />
-        <Button title="Add a cat" onPress={() => {}} />
+        <Button
+          title="Add a cat"
+          onPress={() => {
+            dispatch({
+              type: "TOGGLE_ADD_MODAL",
+              toState: !state.app.isAddModalOpen,
+            });
+          }}
+        />
       </View>
     </SafeAreaView>
   );

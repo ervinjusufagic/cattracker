@@ -9,7 +9,7 @@ export const fetchAllCats = async () => {
     await fetch(`${API_BASE_URL}/cats`, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json", // I added this line
+        "Content-Type": "application/json",
       },
     })
   ).json();
