@@ -16,8 +16,10 @@ import { useQuery } from "react-query";
 import { Colors } from "./utils";
 import { CatCell, AdaptableText } from "./components";
 import { fetchAllCats } from "./service/api";
-import { Cat } from "./types";
 import { StateContext } from "./store/stateContext";
+import { Cat } from "./types";
+
+import { AddCatModal } from "./components/AddCatModal";
 
 const CatTracker = () => {
   const { state, dispatch } = useContext(StateContext);
@@ -69,8 +71,6 @@ const CatTracker = () => {
             ))}
           </View>
         </View>
-
-        {state.app.isAddModalOpen && <AdaptableText>Toggle this</AdaptableText>}
       </ScrollView>
       <View style={styles.actionMenu}>
         <TextInput
@@ -82,11 +82,13 @@ const CatTracker = () => {
           onPress={() => {
             dispatch({
               type: "TOGGLE_ADD_MODAL",
-              toState: !state.app.isAddModalOpen,
+              toState: true,
             });
           }}
         />
       </View>
+
+      {state.app.isAddModalOpen && <AddCatModal />}
     </SafeAreaView>
   );
 };
@@ -111,22 +113,6 @@ const styles = StyleSheet.create({
     flexBasis: "45%",
     overflow: "hidden",
     margin: 5,
-  },
-
-  catImage: {
-    flex: 1,
-  },
-
-  catInfo: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-
-  linearGradient: {
-    flex: 0.5,
-    alignItems: "flex-end",
-    justifyContent: "space-around",
-    flexDirection: "row",
   },
 
   actionMenu: {

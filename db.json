@@ -5,14 +5,14 @@
       "name": "Burito",
       "dateOfBirth": "2021-12-13",
       "alive": "true",
-      "imagePath": "require('./Images/download.jpeg')"
+      "imagePath": "buritocat"
     },
     {
       "id": 2,
       "name": "Bruno",
       "dateOfBirth": "2021-11-20",
       "alive": "true",
-      "image": "require('./Images/download.jpeg')"
+      "imagePath": "angrygraycat"
     }
   ]
 }

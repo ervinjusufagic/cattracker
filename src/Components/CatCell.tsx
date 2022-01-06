@@ -8,17 +8,20 @@ import {
 } from "react-native";
 
 import LinearGradient from "react-native-linear-gradient";
+import { imageMap } from "../images";
 import { Cat } from "../types";
 import { Colors } from "../utils";
 import { AdaptableText } from "./AdaptableText";
 
 const CatCell = ({ cat }: { cat: Cat }) => {
-  const { name, dateOfBirth, imagePath } = cat;
   const isDarkMode = useColorScheme() === "dark";
+
+  const { name, dateOfBirth, imagePath } = cat;
+  const image = imageMap[imagePath];
 
   return (
     <View style={styles.cell}>
-      <ImageBackground style={styles.catImage} source={imagePath}>
+      <ImageBackground style={styles.catImage} source={image}>
         <View style={styles.catInfo}>
           <LinearGradient
             style={styles.linearGradient}
