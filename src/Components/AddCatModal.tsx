@@ -77,14 +77,16 @@ const AddCatModal = () => {
     mutateAsync(newCat);
   };
 
+  const closeModal = () => {
+    dispatch({ type: "TOGGLE_ADD_MODAL", toState: false });
+    dispatch({ type: "RESET_STATE" });
+  };
+
   return (
     <Modal
       animationType="slide"
       presentationStyle="pageSheet"
-      onRequestClose={() => {
-        dispatch({ type: "TOGGLE_ADD_MODAL", toState: false });
-        dispatch({ type: "RESET_STATE" });
-      }}>
+      onRequestClose={() => closeModal()}>
       <View
         style={[{ backgroundColor: getSystemColor(isDarkMode) }, styles.modal]}>
         <AdaptableText style={styles.modalTitle}>Add a new cat</AdaptableText>
@@ -152,18 +154,23 @@ const AddCatModal = () => {
             </View>
           </View>
 
-          <View style={styles.addButtonContainer}>
+          <View style={styles.bottomContainer}>
             {isError && (
               <AdaptableText>Something went wrong, try again.</AdaptableText>
             )}
             {isLoading ? (
               <AdaptableText>Loading...</AdaptableText>
             ) : (
-              <Button
-                disabled={state.addModal.isAddDisabled}
-                onPress={() => addNewCat()}
-                title="Add Cat"
-              />
+              <>
+                <View style={styles.addButtonContainer}>
+                  <Button
+                    disabled={state.addModal.isAddDisabled}
+                    onPress={() => addNewCat()}
+                    title="Add Cat"
+                  />
+                </View>
+                <Button onPress={() => closeModal()} title="Cancel" />
+              </>
             )}
           </View>
         </View>
@@ -207,7 +214,7 @@ const styles = StyleSheet.create({
 
   modalContentContainer: {
     height: 250,
-    marginTop: 20,
+    marginTop: 0,
   },
 
   scrollViewContent: {
@@ -228,19 +235,20 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between",
     marginBottom: 70,
+    padding: 10,
   },
 
   textInput: {
-    height: 30,
     fontSize: 18,
     borderBottomWidth: 1,
     marginBottom: 15,
     marginTop: 15,
+    justifyContent: "center",
   },
 
   dateButtonsContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
   },
 
@@ -249,9 +257,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 
-  addButtonContainer: {
+  bottomContainer: {
     alignItems: "center",
   },
+
+  addButtonContainer: { marginBottom: 10 },
 });
 
 export { AddCatModal };
