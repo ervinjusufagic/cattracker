@@ -10,7 +10,7 @@ import {
 import LinearGradient from "react-native-linear-gradient";
 import { imageMap } from "../images";
 import { Cat } from "../types";
-import { Colors } from "../utils";
+import { Colors, formatDate } from "../utils";
 import { AdaptableText } from "./AdaptableText";
 
 const CatCell = ({ cat }: { cat: Cat }) => {
@@ -18,6 +18,8 @@ const CatCell = ({ cat }: { cat: Cat }) => {
 
   const { name, dateOfBirth, imagePath } = cat;
   const image = imageMap[imagePath];
+
+  console.log(typeof dateOfBirth);
 
   return (
     <View style={styles.cell}>
@@ -27,7 +29,7 @@ const CatCell = ({ cat }: { cat: Cat }) => {
             style={styles.linearGradient}
             colors={["transparent", isDarkMode ? Colors.black : Colors.white]}>
             <AdaptableText>{name}</AdaptableText>
-            <AdaptableText>{dateOfBirth}</AdaptableText>
+            <AdaptableText>{formatDate(dateOfBirth)}</AdaptableText>
           </LinearGradient>
         </View>
       </ImageBackground>

@@ -74,6 +74,7 @@ const CatTracker = () => {
       </ScrollView>
       <View style={styles.actionMenu}>
         <TextInput
+          placeholderTextColor={Colors.gray}
           style={{ color: isDarkMode ? Colors.white : Colors.black }}
           placeholder="Search for a cat..."
         />

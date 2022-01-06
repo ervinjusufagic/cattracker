@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 import {
   Button,
@@ -17,14 +17,67 @@ import { imageMap } from "../images";
 import DatePicker from "react-native-date-picker";
 import { StateContext } from "../store/stateContext";
 import { Colors } from "../utils";
+import { useMutation, useQueryClient } from "react-query";
+import { Cat } from "../types";
+import { addCat } from "../service/api";
 
 const AddCatModal = () => {
   const { state, dispatch } = useContext(StateContext);
 
+  const queryClient = useQueryClient();
   const isDarkMode = useColorScheme() === "dark";
+
+  const { mutateAsync, isLoading, isError, isSuccess, reset } = useMutation(
+    (cat: Cat) => {
+      return addCat(cat);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("cats");
+      },
+    }
+  );
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.black : Colors.white,
+  };
+
+  const dateOfBirthTitle = state.addModal.dateOfBirth
+    ? state.addModal.dateOfBirth.toDateString()
+    : "Date of birth";
+
+  const dateOfDeathTitle = state.addModal.dateOfDeath
+    ? state.addModal.dateOfDeath.toDateString()
+    : "Date of death";
+
+  useEffect(() => {
+    dispatch({ type: "CHECK_IS_ADD_DISABLED" });
+  }, [
+    dispatch,
+    state.addModal.dateOfBirth,
+    state.addModal.image,
+    state.addModal.name,
+  ]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch({ type: "RESET_STATE" });
+      dispatch({ type: "TOGGLE_ADD_MODAL", toState: false });
+      reset();
+    }
+  }, [dispatch, isSuccess, reset]);
+
+  const addNewCat = () => {
+    reset();
+    const newCat: Cat = {
+      id: new Date().getUTCMilliseconds(),
+      name: state.addModal.name,
+      imagePath: state.addModal.image,
+      dateOfBirth: state.addModal.dateOfBirth?.toDateString(),
+      dateOfDeath: state.addModal.dateOfDeath?.toDateString(),
+    };
+
+    mutateAsync(newCat);
   };
 
   return (
@@ -33,6 +86,7 @@ const AddCatModal = () => {
       presentationStyle="pageSheet"
       onRequestClose={() => {
         dispatch({ type: "TOGGLE_ADD_MODAL", toState: false });
+        dispatch({ type: "RESET_STATE" });
       }}>
       <View style={[backgroundStyle, styles.modal]}>
         <AdaptableText style={styles.modalTitle}>Add a new cat</AdaptableText>
@@ -40,10 +94,17 @@ const AddCatModal = () => {
           <ScrollView horizontal>
             <View style={styles.scrollViewContent}>
               {Object.keys(imageMap).map((key, i) => (
-                <TouchableOpacity key={i}>
+                <TouchableOpacity
+                  onPress={() => {
+                    dispatch({ type: "SELECT_CAT_IMAGE", image: key });
+                  }}
+                  key={i}>
                   <Image
                     resizeMode="contain"
-                    style={styles.image}
+                    style={[
+                      styles.image,
+                      state.addModal.image === key && styles.selectedImage,
+                    ]}
                     source={imageMap[key]}
                   />
                 </TouchableOpacity>
@@ -54,25 +115,80 @@ const AddCatModal = () => {
 
         <View style={styles.inputContainer}>
           <View>
-            <TextInput style={styles.textInput} placeholder="Name..." />
+            <TextInput
+              placeholderTextColor={Colors.gray}
+              style={[
+                styles.textInput,
+                {
+                  color: isDarkMode ? Colors.white : Colors.black,
+                  borderBottomColor: isDarkMode ? Colors.white : Colors.black,
+                },
+              ]}
+              onChangeText={text => dispatch({ type: "SET_NAME", name: text })}
+              value={state.addModal.name}
+              placeholder="Name..."
+            />
 
             <View style={styles.dateButtonsContainer}>
-              <Button title="Date of birth" />
+              <Button
+                onPress={() =>
+                  dispatch({
+                    type: "TOGGLE_DATEPICKER",
+                    toState: true,
+                    kind: "BIRTH",
+                  })
+                }
+                title={dateOfBirthTitle}
+              />
               <AdaptableText>-</AdaptableText>
-              <Button title="Death date" />
+              <Button
+                onPress={() =>
+                  dispatch({
+                    type: "TOGGLE_DATEPICKER",
+                    toState: true,
+                    kind: "DEATH",
+                  })
+                }
+                title={dateOfDeathTitle}
+              />
             </View>
           </View>
 
-          <Button disabled={true} title="Add Cat" />
+          <View style={styles.addButtonContainer}>
+            {isError && (
+              <AdaptableText>Something went wrong, try again.</AdaptableText>
+            )}
+            {isLoading ? (
+              <AdaptableText>Loading...</AdaptableText>
+            ) : (
+              <Button
+                disabled={state.addModal.isAddDisabled}
+                onPress={() => addNewCat()}
+                title="Add Cat"
+              />
+            )}
+          </View>
         </View>
       </View>
 
       <DatePicker
         modal
-        open={false}
+        open={state.addModal.datePicker.open}
         date={new Date()}
-        onConfirm={date => {}}
-        onCancel={() => {}}
+        onConfirm={date =>
+          dispatch({
+            type: "SAVE_DATE",
+            date: date,
+            kind: state.addModal.datePicker.kind,
+          })
+        }
+        onCancel={() =>
+          dispatch({
+            type: "TOGGLE_DATEPICKER",
+            toState: false,
+            kind: null,
+          })
+        }
       />
     </Modal>
   );
@@ -102,15 +218,14 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    height: 200,
     width: 200,
-    flex: 1,
+    height: 200,
     marginRight: 10,
   },
 
   inputContainer: {
     flex: 1,
-    width: "60%",
+    width: "100%",
     justifyContent: "space-between",
     marginBottom: 70,
   },
@@ -118,7 +233,6 @@ const styles = StyleSheet.create({
   textInput: {
     height: 30,
     fontSize: 18,
-    borderBottomColor: "#ffffff",
     borderBottomWidth: 1,
     marginBottom: 15,
     marginTop: 15,
@@ -127,6 +241,15 @@ const styles = StyleSheet.create({
   dateButtonsContainer: {
     flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
+  },
+
+  selectedImage: {
+    borderColor: "#007AFF",
+    borderWidth: 1,
+  },
+
+  addButtonContainer: {
     alignItems: "center",
   },
 });

@@ -1,18 +1,16 @@
 {
   "cats": [
     {
-      "id": 1,
+      "id": 928,
       "name": "Burito",
-      "dateOfBirth": "2021-12-13",
-      "alive": "true",
-      "imagePath": "buritocat"
+      "imagePath": "buritocat",
+      "dateOfBirth": "Fri Dec 10 2021"
     },
     {
-      "id": 2,
-      "name": "Bruno",
-      "dateOfBirth": "2021-11-20",
-      "alive": "true",
-      "imagePath": "angrygraycat"
+      "id": 852,
+      "name": "Surprised cat",
+      "imagePath": "suprisedcat",
+      "dateOfBirth": "Sun Dec 19 2021"
     }
   ]
 }
