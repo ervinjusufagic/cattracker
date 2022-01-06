@@ -13,22 +13,16 @@ import {
 
 import { useQuery } from "react-query";
 
-import { Colors } from "./utils";
-import { CatCell, AdaptableText } from "./components";
-import { fetchAllCats } from "./service/api";
 import { StateContext } from "./store/stateContext";
+import { fetchAllCats } from "./service/api";
+import { Colors, getSystemColor } from "./utils";
 import { Cat } from "./types";
-
-import { AddCatModal } from "./components/AddCatModal";
+import { CatCell, AddCatModal, InformationScreen } from "./components";
 
 const CatTracker = () => {
   const { state, dispatch } = useContext(StateContext);
 
   const isDarkMode = useColorScheme() === "dark";
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.white,
-  };
 
   const { isLoading, isError, error, data } = useQuery<Cat[], Error>(
     "cats",
@@ -36,28 +30,25 @@ const CatTracker = () => {
   );
 
   if (isLoading) {
-    return (
-      <View style={[backgroundStyle, styles.secondaryMainView]}>
-        <AdaptableText>Loading Cats ...</AdaptableText>
-      </View>
-    );
+    return <InformationScreen text="Loading..." />;
   }
 
   if (isError) {
     return (
-      <View style={[backgroundStyle, styles.secondaryMainView]}>
-        <AdaptableText>Could not fetch cats :(</AdaptableText>
-        <AdaptableText>{error?.message ?? ""}</AdaptableText>
-      </View>
+      <InformationScreen text={error?.message ?? "Could not fetch cats :("} />
     );
   }
 
   return (
-    <SafeAreaView style={[backgroundStyle, styles.safeView]}>
+    <SafeAreaView
+      style={[
+        { backgroundColor: getSystemColor(isDarkMode) },
+        styles.safeView,
+      ]}>
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
+        style={{ backgroundColor: getSystemColor(isDarkMode) }}>
         <View
           style={[
             styles.appContainer,
@@ -65,7 +56,7 @@ const CatTracker = () => {
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
             },
           ]}>
-          <View style={styles.cellContainer}>
+          <View style={styles.collectionView}>
             {data?.map((cat, index) => (
               <CatCell key={index} cat={cat} />
             ))}
@@ -103,17 +94,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
 
-  cellContainer: {
+  collectionView: {
     justifyContent: "center",
     flexDirection: "row",
     flexWrap: "wrap",
-  },
-
-  cell: {
-    height: 180,
-    flexBasis: "45%",
-    overflow: "hidden",
-    margin: 5,
   },
 
   actionMenu: {
@@ -121,12 +105,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-between",
-  },
-
-  secondaryMainView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
 

@@ -16,3 +16,7 @@ export const formatDate = (dateString: string | undefined) => {
 
   return `${year}/${month}/${day}`;
 };
+
+export const getSystemColor = (isDarkMode: boolean) => {
+  return isDarkMode ? Colors.black : Colors.white;
+};

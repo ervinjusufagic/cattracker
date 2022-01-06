@@ -43,9 +43,7 @@ export const addModalReducer = (
 
     case "CHECK_IS_ADD_DISABLED":
       const { name, image, dateOfBirth } = state;
-
       const isDisabled = name !== "" && image !== "" && dateOfBirth !== null;
-
       return {
         ...state,
         isAddDisabled: !isDisabled,

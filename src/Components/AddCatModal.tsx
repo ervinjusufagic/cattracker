@@ -12,14 +12,15 @@ import {
   View,
 } from "react-native";
 
-import { AdaptableText } from "../components";
-import { imageMap } from "../images";
-import DatePicker from "react-native-date-picker";
-import { StateContext } from "../store/stateContext";
-import { Colors } from "../utils";
 import { useMutation, useQueryClient } from "react-query";
-import { Cat } from "../types";
+import DatePicker from "react-native-date-picker";
+
+import { StateContext } from "../store/stateContext";
 import { addCat } from "../service/api";
+import { Cat } from "../types";
+import { Colors, getSystemColor } from "../utils";
+import { imageMap } from "../images";
+import { AdaptableText } from "../components";
 
 const AddCatModal = () => {
   const { state, dispatch } = useContext(StateContext);
@@ -37,10 +38,6 @@ const AddCatModal = () => {
       },
     }
   );
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.white,
-  };
 
   const dateOfBirthTitle = state.addModal.dateOfBirth
     ? state.addModal.dateOfBirth.toDateString()
@@ -88,7 +85,8 @@ const AddCatModal = () => {
         dispatch({ type: "TOGGLE_ADD_MODAL", toState: false });
         dispatch({ type: "RESET_STATE" });
       }}>
-      <View style={[backgroundStyle, styles.modal]}>
+      <View
+        style={[{ backgroundColor: getSystemColor(isDarkMode) }, styles.modal]}>
         <AdaptableText style={styles.modalTitle}>Add a new cat</AdaptableText>
         <View style={styles.modalContentContainer}>
           <ScrollView horizontal>
@@ -120,8 +118,8 @@ const AddCatModal = () => {
               style={[
                 styles.textInput,
                 {
-                  color: isDarkMode ? Colors.white : Colors.black,
-                  borderBottomColor: isDarkMode ? Colors.white : Colors.black,
+                  color: getSystemColor(!isDarkMode),
+                  borderBottomColor: getSystemColor(!isDarkMode),
                 },
               ]}
               onChangeText={text => dispatch({ type: "SET_NAME", name: text })}
@@ -175,6 +173,8 @@ const AddCatModal = () => {
         modal
         open={state.addModal.datePicker.open}
         date={new Date()}
+        maximumDate={new Date()}
+        mode="date"
         onConfirm={date =>
           dispatch({
             type: "SAVE_DATE",

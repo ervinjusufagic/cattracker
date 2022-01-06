@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, TextStyle, useColorScheme } from "react-native";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import { getSystemColor } from "../utils";
 
 const AdaptableText = ({
   children,
@@ -12,7 +12,7 @@ const AdaptableText = ({
   const isDarkMode = useColorScheme() === "dark";
 
   return (
-    <Text style={[style, { color: isDarkMode ? Colors.white : Colors.black }]}>
+    <Text style={[style, { color: getSystemColor(!isDarkMode) }]}>
       {children}
     </Text>
   );

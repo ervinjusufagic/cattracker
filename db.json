@@ -11,6 +11,25 @@
       "name": "Surprised cat",
       "imagePath": "suprisedcat",
       "dateOfBirth": "Sun Dec 19 2021"
+    },
+    {
+      "id": 839,
+      "name": "Toakatt",
+      "imagePath": "toiletcat",
+      "dateOfBirth": "Sat Oct 30 2021",
+      "dateOfDeath": "Thu Jan 06 2022"
+    },
+    {
+      "id": 416,
+      "name": "Old cat",
+      "imagePath": "angrygraycat",
+      "dateOfBirth": "Sat Jan 02 2021"
+    },
+    {
+      "id": 927,
+      "name": "Funny",
+      "imagePath": "funnycat",
+      "dateOfBirth": "Sun Jan 06 2019"
     }
   ]
 }
