@@ -74,26 +74,32 @@ const CatScreen = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (addCatMutation.isSuccess) {
+    if (addCatMutation.isSuccess || updateCatMutation.isSuccess) {
       closeModal();
       addCatMutation.reset();
+      updateCatMutation.reset();
     }
-  }, [addCatMutation, closeModal]);
+  }, [addCatMutation, updateCatMutation, closeModal]);
 
-  const addNewCat = () => {
-    addCatMutation.reset();
-    const newCat: Cat = {
-      id: new Date().getUTCMilliseconds(),
+  const triggerMutation = () => {
+    const payload: Cat = {
+      id: state.catScreen.catId ?? new Date().getUTCMilliseconds(),
       name: state.catScreen.name,
       imagePath: state.catScreen.image,
       dateOfBirth: state.catScreen.dateOfBirth?.toDateString(),
       dateOfDeath: state.catScreen.dateOfDeath?.toDateString(),
     };
 
-    addCatMutation.mutateAsync(newCat);
-  };
+    if (state.catScreen.type === "ADD") {
+      addCatMutation.reset();
+      addCatMutation.mutateAsync(payload);
+    }
 
-  const editCat = () => {};
+    if (state.catScreen.type === "EDIT") {
+      updateCatMutation.reset();
+      updateCatMutation.mutateAsync(payload);
+    }
+  };
 
   const selectImage = (image: string) => {
     dispatch({ type: "SELECT_CAT_IMAGE", image: image });
@@ -180,9 +186,7 @@ const CatScreen = () => {
                 <View style={styles.addButtonContainer}>
                   <Button
                     disabled={state.catScreen.isAddDisabled}
-                    onPress={() =>
-                      state.catScreen.type === "ADD" ? addNewCat() : editCat()
-                    }
+                    onPress={() => triggerMutation()}
                     title={mutationTriggerButtonText}
                   />
                 </View>
