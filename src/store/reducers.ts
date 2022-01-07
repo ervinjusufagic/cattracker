@@ -19,6 +19,7 @@ export const catScreenReducer = (
 
         return {
           ...state,
+          catId: catInPayload.id,
           name: catInPayload.name,
           image: catInPayload.imagePath,
           dateOfBirth: birth,

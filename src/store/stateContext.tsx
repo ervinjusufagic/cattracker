@@ -4,6 +4,7 @@ import { catScreenReducer } from "./reducers";
 
 const initialState: InitialState = {
   catScreen: {
+    catId: null,
     name: "",
     image: "",
     dateOfBirth: null,

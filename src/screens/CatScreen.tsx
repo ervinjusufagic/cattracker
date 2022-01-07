@@ -12,7 +12,7 @@ import {
 import { useMutation, useQueryClient } from "react-query";
 
 import { StateContext } from "../store/stateContext";
-import { addCat } from "../service/api";
+import { addCat, updateCat } from "../service/api";
 import { Cat, DatePickerType } from "../types";
 import { Colors, getSystemColor } from "../utils";
 import { AdaptableText, ImageCarousel, DateSelector } from "../components";
@@ -23,9 +23,20 @@ const CatScreen = () => {
   const queryClient = useQueryClient();
   const isDarkMode = useColorScheme() === "dark";
 
-  const { mutateAsync, isLoading, isError, isSuccess, reset } = useMutation(
+  const addCatMutation = useMutation(
     (cat: Cat) => {
       return addCat(cat);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("cats");
+      },
+    }
+  );
+
+  const updateCatMutation = useMutation(
+    (cat: Cat) => {
+      return updateCat(cat);
     },
     {
       onSuccess: () => {
@@ -63,14 +74,14 @@ const CatScreen = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (addCatMutation.isSuccess) {
       closeModal();
-      reset();
+      addCatMutation.reset();
     }
-  }, [closeModal, isSuccess, reset]);
+  }, [addCatMutation, closeModal]);
 
   const addNewCat = () => {
-    reset();
+    addCatMutation.reset();
     const newCat: Cat = {
       id: new Date().getUTCMilliseconds(),
       name: state.catScreen.name,
@@ -79,7 +90,7 @@ const CatScreen = () => {
       dateOfDeath: state.catScreen.dateOfDeath?.toDateString(),
     };
 
-    mutateAsync(newCat);
+    addCatMutation.mutateAsync(newCat);
   };
 
   const editCat = () => {};
@@ -159,10 +170,10 @@ const CatScreen = () => {
             />
           </View>
           <View style={styles.bottomInputContainer}>
-            {isError && (
+            {addCatMutation.isError && (
               <AdaptableText>Something went wrong, try again.</AdaptableText>
             )}
-            {isLoading ? (
+            {addCatMutation.isLoading ? (
               <AdaptableText>Loading...</AdaptableText>
             ) : (
               <>

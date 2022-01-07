@@ -15,3 +15,7 @@ export const fetchAllCats = async () => {
 export const addCat = async (payload: Cat) => {
   await axios.post(`${API_BASE_URL}/cats`, payload);
 };
+
+export const updateCat = async (payload: Cat) => {
+  await axios.put(`${API_BASE_URL}/cats/${payload.id}`, payload);
+};

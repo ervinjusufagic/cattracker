@@ -17,6 +17,7 @@ export type InitialState = {
 };
 
 export type CatScreenState = {
+  catId: number | null;
   name: string;
   image: string;
   dateOfBirth: Date | null;
