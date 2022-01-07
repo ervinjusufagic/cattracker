@@ -18,15 +18,17 @@ export const catScreenReducer = (
     case "TOGGLE_DATEPICKER":
       return {
         ...state,
-        datePicker: { open: action.toState, kind: action.kind },
+        datePicker: { open: action.toState, type: action.datePickerType },
       };
 
     case "SAVE_DATE":
       return {
         ...state,
-        dateOfBirth: action.kind === "BIRTH" ? action.date : state.dateOfBirth,
-        dateOfDeath: action.kind === "DEATH" ? action.date : state.dateOfDeath,
-        datePicker: { open: false, kind: null },
+        dateOfBirth:
+          action.datePickerType === "BIRTH" ? action.date : state.dateOfBirth,
+        dateOfDeath:
+          action.datePickerType === "DEATH" ? action.date : state.dateOfDeath,
+        datePicker: { open: false, type: null },
       };
 
     case "SELECT_CAT_IMAGE":

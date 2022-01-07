@@ -55,6 +55,18 @@
       "name": "Burito 2",
       "imagePath": "buritocat",
       "dateOfBirth": "Tue Jan 09 2018"
+    },
+    {
+      "id": 52,
+      "name": "Suppe",
+      "imagePath": "suprisedcat",
+      "dateOfBirth": "Tue Jan 07 2014"
+    },
+    {
+      "id": 155,
+      "name": "Derp",
+      "imagePath": "funnycat",
+      "dateOfBirth": "Sat Jan 07 2012"
     }
   ]
 }

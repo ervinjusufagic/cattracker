@@ -3,6 +3,7 @@ import React from "react";
 import {
   ImageBackground,
   StyleSheet,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from "react-native";
@@ -20,7 +21,7 @@ const CatCell = ({ cat }: { cat: Cat }) => {
   const image = imageMap[imagePath];
 
   return (
-    <View style={styles.cell}>
+    <TouchableOpacity style={styles.cell}>
       <ImageBackground style={styles.catImage} source={image}>
         <View style={styles.catInfo}>
           <LinearGradient
@@ -31,7 +32,7 @@ const CatCell = ({ cat }: { cat: Cat }) => {
           </LinearGradient>
         </View>
       </ImageBackground>
-    </View>
+    </TouchableOpacity>
   );
 };
 

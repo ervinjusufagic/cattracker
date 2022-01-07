@@ -14,7 +14,7 @@ const initialState: InitialState = {
     isAddDisabled: true,
     datePicker: {
       open: false,
-      kind: null,
+      type: null,
     },
   },
 };

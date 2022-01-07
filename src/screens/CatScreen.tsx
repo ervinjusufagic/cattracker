@@ -2,25 +2,20 @@ import React, { useContext, useEffect } from "react";
 
 import {
   Button,
-  Image,
   Modal,
-  ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   useColorScheme,
   View,
 } from "react-native";
 
 import { useMutation, useQueryClient } from "react-query";
-import DatePicker from "react-native-date-picker";
 
 import { StateContext } from "../store/stateContext";
 import { addCat } from "../service/api";
-import { Cat } from "../types";
+import { Cat, DatePickerType } from "../types";
 import { Colors, getSystemColor } from "../utils";
-import { imageMap } from "../images";
-import { AdaptableText } from "../components";
+import { AdaptableText, ImageCarousel, DateSelector } from "../components";
 
 const CatScreen = () => {
   const { state, dispatch } = useContext(StateContext);
@@ -82,6 +77,34 @@ const CatScreen = () => {
     dispatch({ type: "RESET_STATE" });
   };
 
+  const selectImage = (image: string) => {
+    dispatch({ type: "SELECT_CAT_IMAGE", image: image });
+  };
+
+  const openDateSelector = (type: DatePickerType) => {
+    dispatch({
+      type: "TOGGLE_DATEPICKER",
+      toState: true,
+      datePickerType: type,
+    });
+  };
+
+  const confirmDateSelector = (date: Date) => {
+    dispatch({
+      type: "SAVE_DATE",
+      date: date,
+      datePickerType: state.catScreen.datePicker.type,
+    });
+  };
+
+  const onCancelDateSelector = () => {
+    dispatch({
+      type: "TOGGLE_DATEPICKER",
+      toState: false,
+      datePickerType: null,
+    });
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -90,31 +113,19 @@ const CatScreen = () => {
       <View
         style={[{ backgroundColor: getSystemColor(isDarkMode) }, styles.modal]}>
         <AdaptableText style={styles.modalTitle}>Add a new cat</AdaptableText>
-        <View style={styles.modalContentContainer}>
-          <ScrollView horizontal>
-            <View style={styles.scrollViewContent}>
-              {Object.keys(imageMap).map((key, i) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    dispatch({ type: "SELECT_CAT_IMAGE", image: key });
-                  }}
-                  key={i}>
-                  <Image
-                    resizeMode="contain"
-                    style={[
-                      styles.image,
-                      state.catScreen.image === key && styles.selectedImage,
-                    ]}
-                    source={imageMap[key]}
-                  />
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
 
         <View style={styles.inputContainer}>
-          <View>
+          <View style={styles.carouselContainer}>
+            <ImageCarousel
+              onSelectImage={image => selectImage(image)}
+              selectedImage={state.catScreen.image}
+            />
+            <AdaptableText style={styles.selectImageTitle}>
+              Select an image.
+            </AdaptableText>
+          </View>
+
+          <View style={styles.topInputContainer}>
             <TextInput
               placeholderTextColor={Colors.gray}
               style={[
@@ -129,32 +140,16 @@ const CatScreen = () => {
               placeholder="Name..."
             />
 
-            <View style={styles.dateButtonsContainer}>
-              <Button
-                onPress={() =>
-                  dispatch({
-                    type: "TOGGLE_DATEPICKER",
-                    toState: true,
-                    kind: "BIRTH",
-                  })
-                }
-                title={dateOfBirthTitle}
-              />
-              <AdaptableText>-</AdaptableText>
-              <Button
-                onPress={() =>
-                  dispatch({
-                    type: "TOGGLE_DATEPICKER",
-                    toState: true,
-                    kind: "DEATH",
-                  })
-                }
-                title={dateOfDeathTitle}
-              />
-            </View>
+            <DateSelector
+              open={state.catScreen.datePicker.open}
+              onOpen={type => openDateSelector(type)}
+              onConfirm={date => confirmDateSelector(date)}
+              onCancel={() => onCancelDateSelector()}
+              dateOfBirthTitle={dateOfBirthTitle}
+              dateOfDeathTitle={dateOfDeathTitle}
+            />
           </View>
-
-          <View style={styles.bottomContainer}>
+          <View style={styles.bottomInputContainer}>
             {isError && (
               <AdaptableText>Something went wrong, try again.</AdaptableText>
             )}
@@ -175,28 +170,6 @@ const CatScreen = () => {
           </View>
         </View>
       </View>
-
-      <DatePicker
-        modal
-        open={state.catScreen.datePicker.open}
-        date={new Date()}
-        maximumDate={new Date()}
-        mode="date"
-        onConfirm={date =>
-          dispatch({
-            type: "SAVE_DATE",
-            date: date,
-            kind: state.catScreen.datePicker.kind,
-          })
-        }
-        onCancel={() =>
-          dispatch({
-            type: "TOGGLE_DATEPICKER",
-            toState: false,
-            kind: null,
-          })
-        }
-      />
     </Modal>
   );
 };
@@ -209,31 +182,19 @@ const styles = StyleSheet.create({
   },
 
   modalTitle: {
-    fontSize: 24,
+    fontSize: 36,
+    marginTop: 60,
   },
 
-  modalContentContainer: {
+  carouselContainer: {
     height: 250,
-    marginTop: 0,
-  },
-
-  scrollViewContent: {
-    height: 250,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  image: {
-    width: 200,
-    height: 200,
-    marginRight: 10,
+    marginBottom: 30,
   },
 
   inputContainer: {
     flex: 1,
     width: "100%",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     marginBottom: 70,
     padding: 10,
   },
@@ -246,22 +207,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  dateButtonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  topInputContainer: {
+    marginBottom: 50,
+  },
+
+  bottomInputContainer: {
     alignItems: "center",
   },
 
-  selectedImage: {
-    borderColor: "#007AFF",
-    borderWidth: 1,
+  addButtonContainer: {
+    marginBottom: 10,
   },
 
-  bottomContainer: {
-    alignItems: "center",
+  selectImageTitle: {
+    marginTop: -20,
+    fontSize: 9,
   },
-
-  addButtonContainer: { marginBottom: 10 },
 });
 
 export { CatScreen };
