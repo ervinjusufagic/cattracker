@@ -17,7 +17,7 @@ import { StateContext } from "./store/stateContext";
 import { fetchAllCats } from "./service/api";
 import { Colors, getSystemColor } from "./utils";
 import { Cat } from "./types";
-import { CatCell, AddCatModal, InformationScreen } from "./components";
+import { CatCell, InformationScreen, AddCatScreen } from "./components";
 
 const CatTracker = () => {
   const { state, dispatch } = useContext(StateContext);
@@ -80,7 +80,7 @@ const CatTracker = () => {
         />
       </View>
 
-      {state.app.isAddModalOpen && <AddCatModal />}
+      {state.app.isAddModalOpen && <AddCatScreen />}
     </SafeAreaView>
   );
 };

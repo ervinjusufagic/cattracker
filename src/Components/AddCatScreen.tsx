@@ -20,9 +20,9 @@ import { addCat } from "../service/api";
 import { Cat } from "../types";
 import { Colors, getSystemColor } from "../utils";
 import { imageMap } from "../images";
-import { AdaptableText } from "../components";
+import { AdaptableText } from ".";
 
-const AddCatModal = () => {
+const AddCatScreen = () => {
   const { state, dispatch } = useContext(StateContext);
 
   const queryClient = useQueryClient();
@@ -264,4 +264,4 @@ const styles = StyleSheet.create({
   addButtonContainer: { marginBottom: 10 },
 });
 
-export { AddCatModal };
+export { AddCatScreen };

@@ -42,6 +42,13 @@
       "name": "adafasf",
       "imagePath": "suprisedcat",
       "dateOfBirth": "Sun Jan 06 2019"
+    },
+    {
+      "id": 706,
+      "name": "toilet",
+      "imagePath": "toiletcat",
+      "dateOfBirth": "Thu Jan 06 2022",
+      "dateOfDeath": "Thu Jan 06 2022"
     }
   ]
 }
