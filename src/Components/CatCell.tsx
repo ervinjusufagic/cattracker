@@ -14,14 +14,14 @@ import { Cat } from "../types";
 import { Colors, formatDate } from "../utils";
 import { AdaptableText } from ".";
 
-const CatCell = ({ cat }: { cat: Cat }) => {
+const CatCell = ({ onSelect, cat }: { onSelect: () => void; cat: Cat }) => {
   const isDarkMode = useColorScheme() === "dark";
 
   const { name, dateOfBirth, imagePath } = cat;
   const image = imageMap[imagePath];
 
   return (
-    <TouchableOpacity style={styles.cell}>
+    <TouchableOpacity onPress={() => onSelect()} style={styles.cell}>
       <ImageBackground style={styles.catImage} source={image}>
         <View style={styles.catInfo}>
           <LinearGradient

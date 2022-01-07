@@ -6,9 +6,32 @@ export const catScreenReducer = (
 ): CatScreenState => {
   switch (action.type) {
     case "TOGGLE_CATSCREEN":
+      //if cat exists, we are in edit, populate cat data
+      const catInPayload = action.cat;
+
+      if (catInPayload) {
+        let birth = catInPayload.dateOfBirth
+          ? new Date(catInPayload.dateOfBirth)
+          : null;
+        let death = catInPayload.dateOfDeath
+          ? new Date(catInPayload.dateOfDeath)
+          : null;
+
+        return {
+          ...state,
+          name: catInPayload.name,
+          image: catInPayload.imagePath,
+          dateOfBirth: birth,
+          dateOfDeath: death,
+          isOpen: action.toState,
+          type: "EDIT",
+        };
+      }
+
       return {
         ...state,
         isOpen: action.toState,
+        type: action.toState ? "ADD" : null, // reset if its closing
       };
 
     case "TOGGLE_DATEPICKER":
@@ -47,7 +70,7 @@ export const catScreenReducer = (
         isAddDisabled: !isDisabled,
       };
 
-    case "RESET_STATE":
+    case "RESET_CATSCREEN_STATE":
       return {
         ...state,
         name: "",

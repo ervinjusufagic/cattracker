@@ -67,6 +67,12 @@
       "name": "Derp",
       "imagePath": "funnycat",
       "dateOfBirth": "Sat Jan 07 2012"
+    },
+    {
+      "id": 609,
+      "name": "Buritos",
+      "imagePath": "buritocat",
+      "dateOfBirth": "Fri Jan 07 2022"
     }
   ]
 }

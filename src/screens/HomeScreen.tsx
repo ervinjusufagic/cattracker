@@ -30,6 +30,14 @@ const HomeScreen = () => {
     fetchAllCats
   );
 
+  const openCatScreen = (cat?: Cat) => {
+    dispatch({
+      type: "TOGGLE_CATSCREEN",
+      toState: true,
+      cat: cat,
+    });
+  };
+
   if (isLoading) {
     return <InformationScreen text="Loading..." />;
   }
@@ -59,7 +67,11 @@ const HomeScreen = () => {
           ]}>
           <View style={styles.collectionView}>
             {data?.map((cat, index) => (
-              <CatCell key={index} cat={cat} />
+              <CatCell
+                onSelect={() => openCatScreen(cat)}
+                key={index}
+                cat={cat}
+              />
             ))}
           </View>
         </View>
@@ -70,15 +82,7 @@ const HomeScreen = () => {
           style={{ color: isDarkMode ? Colors.white : Colors.black }}
           placeholder="Search for a cat..."
         />
-        <Button
-          title="Add a cat"
-          onPress={() => {
-            dispatch({
-              type: "TOGGLE_CATSCREEN",
-              toState: true,
-            });
-          }}
-        />
+        <Button title="Add a cat" onPress={() => openCatScreen()} />
       </View>
 
       {state.catScreen.isOpen && <CatScreen />}

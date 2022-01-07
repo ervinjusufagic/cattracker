@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 
 import {
   Button,
@@ -34,6 +34,12 @@ const CatScreen = () => {
     }
   );
 
+  const catScreenTitle =
+    state.catScreen.type === "ADD" ? "Add a new cat" : `Edit cat`;
+
+  const mutationTriggerButtonText =
+    state.catScreen.type === "ADD" ? "Add" : "Confirm";
+
   const dateOfBirthTitle = state.catScreen.dateOfBirth
     ? state.catScreen.dateOfBirth.toDateString()
     : "Date of birth";
@@ -51,13 +57,17 @@ const CatScreen = () => {
     state.catScreen.name,
   ]);
 
+  const closeModal = useCallback(() => {
+    dispatch({ type: "TOGGLE_CATSCREEN", toState: false });
+    dispatch({ type: "RESET_CATSCREEN_STATE" });
+  }, [dispatch]);
+
   useEffect(() => {
     if (isSuccess) {
-      dispatch({ type: "RESET_STATE" });
-      dispatch({ type: "TOGGLE_CATSCREEN", toState: false });
+      closeModal();
       reset();
     }
-  }, [dispatch, isSuccess, reset]);
+  }, [closeModal, isSuccess, reset]);
 
   const addNewCat = () => {
     reset();
@@ -72,10 +82,7 @@ const CatScreen = () => {
     mutateAsync(newCat);
   };
 
-  const closeModal = () => {
-    dispatch({ type: "TOGGLE_CATSCREEN", toState: false });
-    dispatch({ type: "RESET_STATE" });
-  };
+  const editCat = () => {};
 
   const selectImage = (image: string) => {
     dispatch({ type: "SELECT_CAT_IMAGE", image: image });
@@ -112,7 +119,9 @@ const CatScreen = () => {
       onRequestClose={() => closeModal()}>
       <View
         style={[{ backgroundColor: getSystemColor(isDarkMode) }, styles.modal]}>
-        <AdaptableText style={styles.modalTitle}>Add a new cat</AdaptableText>
+        <AdaptableText style={styles.modalTitle}>
+          {catScreenTitle}
+        </AdaptableText>
 
         <View style={styles.inputContainer}>
           <View style={styles.carouselContainer}>
@@ -160,8 +169,10 @@ const CatScreen = () => {
                 <View style={styles.addButtonContainer}>
                   <Button
                     disabled={state.catScreen.isAddDisabled}
-                    onPress={() => addNewCat()}
-                    title="Add Cat"
+                    onPress={() =>
+                      state.catScreen.type === "ADD" ? addNewCat() : editCat()
+                    }
+                    title={mutationTriggerButtonText}
                   />
                 </View>
                 <Button onPress={() => closeModal()} title="Cancel" />

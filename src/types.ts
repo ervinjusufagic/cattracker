@@ -44,7 +44,11 @@ export type CatScreenAction =
   | { type: "SELECT_CAT_IMAGE"; image: string }
   | { type: "SET_NAME"; name: string }
   | { type: "CHECK_IS_ADD_DISABLED" }
-  | { type: "RESET_STATE" }
-  | { type: "TOGGLE_CATSCREEN"; toState: boolean };
+  | { type: "RESET_CATSCREEN_STATE" }
+  | {
+      type: "TOGGLE_CATSCREEN";
+      toState: boolean;
+      cat?: Cat;
+    };
 
 export type Action = CatScreenAction;
