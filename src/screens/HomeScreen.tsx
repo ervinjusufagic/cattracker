@@ -13,13 +13,14 @@ import {
 
 import { useQuery } from "react-query";
 
-import { StateContext } from "./store/stateContext";
-import { fetchAllCats } from "./service/api";
-import { Colors, getSystemColor } from "./utils";
-import { Cat } from "./types";
-import { CatCell, InformationScreen, AddCatScreen } from "./components";
+import { StateContext } from "../store/stateContext";
+import { fetchAllCats } from "../service/api";
+import { Colors, getSystemColor } from "../utils";
+import { Cat } from "../types";
+import { CatCell } from "../components";
+import { CatScreen, InformationScreen } from ".";
 
-const CatTracker = () => {
+const HomeScreen = () => {
   const { state, dispatch } = useContext(StateContext);
 
   const isDarkMode = useColorScheme() === "dark";
@@ -80,7 +81,7 @@ const CatTracker = () => {
         />
       </View>
 
-      {state.app.isAddModalOpen && <AddCatScreen />}
+      {state.app.isAddModalOpen && <CatScreen />}
     </SafeAreaView>
   );
 };
@@ -108,4 +109,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CatTracker;
+export { HomeScreen };

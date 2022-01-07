@@ -49,6 +49,12 @@
       "imagePath": "toiletcat",
       "dateOfBirth": "Thu Jan 06 2022",
       "dateOfDeath": "Thu Jan 06 2022"
+    },
+    {
+      "id": 858,
+      "name": "Burito 2",
+      "imagePath": "buritocat",
+      "dateOfBirth": "Tue Jan 09 2018"
     }
   ]
 }

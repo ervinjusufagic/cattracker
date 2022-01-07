@@ -12,14 +12,14 @@ export type DatePickerKind = "BIRTH" | "DEATH" | null;
 // State
 export type InitialState = {
   app: AppState;
-  addModal: AddModalState;
+  catScreen: CatScreenState;
 };
 
 export type AppState = {
   isAddModalOpen: boolean;
 };
 
-export type AddModalState = {
+export type CatScreenState = {
   name: string;
   image: string;
   dateOfBirth: Date | null;
@@ -36,7 +36,7 @@ export type DatePickerState = {
 // Actions
 export type AppAction = { type: "TOGGLE_ADD_MODAL"; toState: boolean };
 
-export type AddModalAction =
+export type CatScreenAction =
   | { type: "TOGGLE_DATEPICKER"; toState: boolean; kind: DatePickerKind }
   | { type: "SAVE_DATE"; date: Date; kind: DatePickerKind }
   | { type: "SELECT_CAT_IMAGE"; image: string }
@@ -44,4 +44,4 @@ export type AddModalAction =
   | { type: "CHECK_IS_ADD_DISABLED" }
   | { type: "RESET_STATE" };
 
-export type Action = AppAction | AddModalAction;
+export type Action = AppAction | CatScreenAction;

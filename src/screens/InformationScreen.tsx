@@ -1,7 +1,7 @@
 import React from "react";
 
 import { StyleSheet, useColorScheme, View } from "react-native";
-import { AdaptableText } from ".";
+import { AdaptableText } from "../components";
 import { getSystemColor } from "../utils";
 
 const InformationScreen = ({ text }: { text: string }) => {

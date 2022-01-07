@@ -1,4 +1,4 @@
-import { Action, AddModalState, AppState } from "../types";
+import { Action, CatScreenState, AppState } from "../types";
 
 export const appStateReducer = (state: AppState, action: Action): AppState => {
   switch (action.type) {
@@ -10,10 +10,10 @@ export const appStateReducer = (state: AppState, action: Action): AppState => {
   }
 };
 
-export const addModalReducer = (
-  state: AddModalState,
+export const catScreenReducer = (
+  state: CatScreenState,
   action: Action
-): AddModalState => {
+): CatScreenState => {
   switch (action.type) {
     case "TOGGLE_DATEPICKER":
       return {

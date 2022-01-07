@@ -1,12 +1,12 @@
 import React, { createContext, useReducer } from "react";
 import { Action, InitialState } from "../types";
-import { addModalReducer, appStateReducer } from "./reducers";
+import { catScreenReducer, appStateReducer } from "./reducers";
 
 const initialState: InitialState = {
   app: {
     isAddModalOpen: false,
   },
-  addModal: {
+  catScreen: {
     name: "",
     image: "",
     dateOfBirth: null,
@@ -27,9 +27,9 @@ const StateContext = createContext<{
   dispatch: () => null,
 });
 
-const mainReducer = ({ app, addModal }: InitialState, action: Action) => ({
+const mainReducer = ({ app, catScreen }: InitialState, action: Action) => ({
   app: appStateReducer(app, action),
-  addModal: addModalReducer(addModal, action),
+  catScreen: catScreenReducer(catScreen, action),
 });
 
 const StateProvider: React.FC = ({ children }) => {

@@ -1,7 +1,8 @@
 import React from "react";
 
 import { QueryClient, QueryClientProvider } from "react-query";
-import CatTracker from "./CatTracker";
+import { HomeScreen } from "./screens";
+
 import { StateProvider } from "./store/stateContext";
 
 const App = () => {
@@ -10,7 +11,7 @@ const App = () => {
   return (
     <StateProvider>
       <QueryClientProvider client={queryClient}>
-        <CatTracker />
+        <HomeScreen />
       </QueryClientProvider>
     </StateProvider>
   );

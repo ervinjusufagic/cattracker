@@ -20,9 +20,9 @@ import { addCat } from "../service/api";
 import { Cat } from "../types";
 import { Colors, getSystemColor } from "../utils";
 import { imageMap } from "../images";
-import { AdaptableText } from ".";
+import { AdaptableText } from "../components";
 
-const AddCatScreen = () => {
+const CatScreen = () => {
   const { state, dispatch } = useContext(StateContext);
 
   const queryClient = useQueryClient();
@@ -39,21 +39,21 @@ const AddCatScreen = () => {
     }
   );
 
-  const dateOfBirthTitle = state.addModal.dateOfBirth
-    ? state.addModal.dateOfBirth.toDateString()
+  const dateOfBirthTitle = state.catScreen.dateOfBirth
+    ? state.catScreen.dateOfBirth.toDateString()
     : "Date of birth";
 
-  const dateOfDeathTitle = state.addModal.dateOfDeath
-    ? state.addModal.dateOfDeath.toDateString()
+  const dateOfDeathTitle = state.catScreen.dateOfDeath
+    ? state.catScreen.dateOfDeath.toDateString()
     : "Date of death";
 
   useEffect(() => {
     dispatch({ type: "CHECK_IS_ADD_DISABLED" });
   }, [
     dispatch,
-    state.addModal.dateOfBirth,
-    state.addModal.image,
-    state.addModal.name,
+    state.catScreen.dateOfBirth,
+    state.catScreen.image,
+    state.catScreen.name,
   ]);
 
   useEffect(() => {
@@ -68,10 +68,10 @@ const AddCatScreen = () => {
     reset();
     const newCat: Cat = {
       id: new Date().getUTCMilliseconds(),
-      name: state.addModal.name,
-      imagePath: state.addModal.image,
-      dateOfBirth: state.addModal.dateOfBirth?.toDateString(),
-      dateOfDeath: state.addModal.dateOfDeath?.toDateString(),
+      name: state.catScreen.name,
+      imagePath: state.catScreen.image,
+      dateOfBirth: state.catScreen.dateOfBirth?.toDateString(),
+      dateOfDeath: state.catScreen.dateOfDeath?.toDateString(),
     };
 
     mutateAsync(newCat);
@@ -103,7 +103,7 @@ const AddCatScreen = () => {
                     resizeMode="contain"
                     style={[
                       styles.image,
-                      state.addModal.image === key && styles.selectedImage,
+                      state.catScreen.image === key && styles.selectedImage,
                     ]}
                     source={imageMap[key]}
                   />
@@ -125,7 +125,7 @@ const AddCatScreen = () => {
                 },
               ]}
               onChangeText={text => dispatch({ type: "SET_NAME", name: text })}
-              value={state.addModal.name}
+              value={state.catScreen.name}
               placeholder="Name..."
             />
 
@@ -164,7 +164,7 @@ const AddCatScreen = () => {
               <>
                 <View style={styles.addButtonContainer}>
                   <Button
-                    disabled={state.addModal.isAddDisabled}
+                    disabled={state.catScreen.isAddDisabled}
                     onPress={() => addNewCat()}
                     title="Add Cat"
                   />
@@ -178,7 +178,7 @@ const AddCatScreen = () => {
 
       <DatePicker
         modal
-        open={state.addModal.datePicker.open}
+        open={state.catScreen.datePicker.open}
         date={new Date()}
         maximumDate={new Date()}
         mode="date"
@@ -186,7 +186,7 @@ const AddCatScreen = () => {
           dispatch({
             type: "SAVE_DATE",
             date: date,
-            kind: state.addModal.datePicker.kind,
+            kind: state.catScreen.datePicker.kind,
           })
         }
         onCancel={() =>
@@ -264,4 +264,4 @@ const styles = StyleSheet.create({
   addButtonContainer: { marginBottom: 10 },
 });
 
-export { AddCatScreen };
+export { CatScreen };
