@@ -1,20 +1,16 @@
-import { Action, CatScreenState, AppState } from "../types";
-
-export const appStateReducer = (state: AppState, action: Action): AppState => {
-  switch (action.type) {
-    case "TOGGLE_ADD_MODAL":
-      return { ...state, isAddModalOpen: action.toState };
-
-    default:
-      return state;
-  }
-};
+import { Action, CatScreenState } from "../types";
 
 export const catScreenReducer = (
   state: CatScreenState,
   action: Action
 ): CatScreenState => {
   switch (action.type) {
+    case "TOGGLE_CATSCREEN":
+      return {
+        ...state,
+        isOpen: action.toState,
+      };
+
     case "TOGGLE_DATEPICKER":
       return {
         ...state,

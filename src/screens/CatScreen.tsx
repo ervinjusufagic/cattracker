@@ -54,7 +54,7 @@ const CatScreen = () => {
   useEffect(() => {
     if (isSuccess) {
       dispatch({ type: "RESET_STATE" });
-      dispatch({ type: "TOGGLE_ADD_MODAL", toState: false });
+      dispatch({ type: "TOGGLE_CATSCREEN", toState: false });
       reset();
     }
   }, [dispatch, isSuccess, reset]);
@@ -73,7 +73,7 @@ const CatScreen = () => {
   };
 
   const closeModal = () => {
-    dispatch({ type: "TOGGLE_ADD_MODAL", toState: false });
+    dispatch({ type: "TOGGLE_CATSCREEN", toState: false });
     dispatch({ type: "RESET_STATE" });
   };
 

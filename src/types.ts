@@ -13,12 +13,7 @@ export type CatScreenType = "ADD" | "EDIT" | null;
 
 // State
 export type InitialState = {
-  app: AppState;
   catScreen: CatScreenState;
-};
-
-export type AppState = {
-  isAddModalOpen: boolean;
 };
 
 export type CatScreenState = {
@@ -28,6 +23,8 @@ export type CatScreenState = {
   dateOfDeath: Date | null;
   datePicker: DatePickerState;
   isAddDisabled: boolean;
+  isOpen: boolean;
+  type: CatScreenType;
 };
 
 export type DatePickerState = {
@@ -36,7 +33,6 @@ export type DatePickerState = {
 };
 
 // Actions
-export type AppAction = { type: "TOGGLE_ADD_MODAL"; toState: boolean };
 
 export type CatScreenAction =
   | {
@@ -48,6 +44,7 @@ export type CatScreenAction =
   | { type: "SELECT_CAT_IMAGE"; image: string }
   | { type: "SET_NAME"; name: string }
   | { type: "CHECK_IS_ADD_DISABLED" }
-  | { type: "RESET_STATE" };
+  | { type: "RESET_STATE" }
+  | { type: "TOGGLE_CATSCREEN"; toState: boolean };
 
-export type Action = AppAction | CatScreenAction;
+export type Action = CatScreenAction;

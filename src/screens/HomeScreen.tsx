@@ -74,14 +74,14 @@ const HomeScreen = () => {
           title="Add a cat"
           onPress={() => {
             dispatch({
-              type: "TOGGLE_ADD_MODAL",
+              type: "TOGGLE_CATSCREEN",
               toState: true,
             });
           }}
         />
       </View>
 
-      {state.app.isAddModalOpen && <CatScreen />}
+      {state.catScreen.isOpen && <CatScreen />}
     </SafeAreaView>
   );
 };

@@ -1,11 +1,8 @@
 import React, { createContext, useReducer } from "react";
 import { Action, InitialState } from "../types";
-import { catScreenReducer, appStateReducer } from "./reducers";
+import { catScreenReducer } from "./reducers";
 
 const initialState: InitialState = {
-  app: {
-    isAddModalOpen: false,
-  },
   catScreen: {
     name: "",
     image: "",
@@ -16,6 +13,8 @@ const initialState: InitialState = {
       open: false,
       type: null,
     },
+    isOpen: false,
+    type: null,
   },
 };
 
@@ -27,8 +26,7 @@ const StateContext = createContext<{
   dispatch: () => null,
 });
 
-const mainReducer = ({ app, catScreen }: InitialState, action: Action) => ({
-  app: appStateReducer(app, action),
+const mainReducer = ({ catScreen }: InitialState, action: Action) => ({
   catScreen: catScreenReducer(catScreen, action),
 });
 
