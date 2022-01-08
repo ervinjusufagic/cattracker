@@ -3,7 +3,6 @@ import React, { useContext } from "react";
 import {
   Button,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   TextInput,
@@ -17,7 +16,7 @@ import { StateContext } from "../store/stateContext";
 import { fetchAllCats } from "../service/api";
 import { Colors, getSystemColor } from "../utils";
 import { Cat } from "../types";
-import { CatCell } from "../components";
+import { CollectionView } from "../components";
 import { EditCatScreen, InformationScreen, AddCatScreen } from ".";
 
 const HomeScreen = () => {
@@ -40,6 +39,14 @@ const HomeScreen = () => {
     );
   }
 
+  const onSelectCollectionViewItem = (cat: Cat) => {
+    dispatch({
+      type: "TOGGLE_EDIT_CAT_SCREEN",
+      toState: true,
+      selectedCat: cat,
+    });
+  };
+
   return (
     <SafeAreaView
       style={[
@@ -47,33 +54,13 @@ const HomeScreen = () => {
         styles.safeView,
       ]}>
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={{ backgroundColor: getSystemColor(isDarkMode) }}>
-        <View
-          style={[
-            styles.appContainer,
-            {
-              backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            },
-          ]}>
-          <View style={styles.collectionView}>
-            {data?.map((cat, index) => (
-              <CatCell
-                onSelect={() =>
-                  dispatch({
-                    type: "TOGGLE_EDIT_CAT_SCREEN",
-                    toState: true,
-                    selectedCat: cat,
-                  })
-                }
-                key={index}
-                cat={cat}
-              />
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+
+      {data ? (
+        <CollectionView data={data} onSelectItem={onSelectCollectionViewItem} />
+      ) : (
+        <InformationScreen text="No cats found" />
+      )}
+
       <View style={styles.actionMenu}>
         <TextInput
           placeholderTextColor={Colors.gray}
@@ -97,16 +84,6 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   safeView: {
     flex: 1,
-  },
-
-  appContainer: {
-    paddingVertical: 10,
-  },
-
-  collectionView: {
-    justifyContent: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
   },
 
   actionMenu: {
