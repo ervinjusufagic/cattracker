@@ -33,10 +33,12 @@ const CatScreen = ({
 }) => {
   const { state, dispatch } = useContext(StateContext);
 
+  const { datePicker, image, name, dateOfBirth, dateOfDeath } = state.catScreen;
+
   const isDarkMode = useColorScheme() === "dark";
 
-  const selectImage = (image: string) => {
-    dispatch({ type: "SELECT_CAT_IMAGE", image: image });
+  const selectImage = (selectedImage: string) => {
+    dispatch({ type: "SELECT_CAT_IMAGE", image: selectedImage });
   };
 
   const openDateSelector = (type: DatePickerType) => {
@@ -51,7 +53,7 @@ const CatScreen = ({
     dispatch({
       type: "SAVE_DATE",
       date: date,
-      datePickerType: state.catScreen.datePicker.type,
+      datePickerType: datePicker.type,
     });
   };
 
@@ -75,8 +77,8 @@ const CatScreen = ({
         <View style={styles.inputContainer}>
           <View style={styles.carouselContainer}>
             <ImageCarousel
-              onSelectImage={image => selectImage(image)}
-              selectedImage={state.catScreen.image}
+              onSelectImage={selectedImage => selectImage(selectedImage)}
+              selectedImage={image}
             />
             <AdaptableText style={styles.selectImageTitle}>
               Select an image.
@@ -94,17 +96,17 @@ const CatScreen = ({
                 },
               ]}
               onChangeText={text => dispatch({ type: "SET_NAME", name: text })}
-              value={state.catScreen.name}
+              value={name}
               placeholder="Name..."
             />
 
             <DateSelector
-              open={state.catScreen.datePicker.open}
+              open={datePicker.open}
               onOpen={type => openDateSelector(type)}
               onConfirm={date => confirmDateSelector(date)}
               onCancel={() => onCancelDateSelector()}
-              dateOfBirth={state.catScreen.dateOfBirth}
-              dateOfDeath={state.catScreen.dateOfDeath}
+              dateOfBirth={dateOfBirth}
+              dateOfDeath={dateOfDeath}
             />
           </View>
           <View style={styles.bottomInputContainer}>

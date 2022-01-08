@@ -10,6 +10,9 @@ import { CatScreen } from ".";
 const AddCatScreen = () => {
   const { state, dispatch } = useContext(StateContext);
 
+  const { name, image, dateOfBirth, dateOfDeath, isAddDisabled } =
+    state.catScreen;
+
   const queryClient = useQueryClient();
 
   const addCatMutation = useMutation(
@@ -27,12 +30,7 @@ const AddCatScreen = () => {
   useEffect(() => {
     // death is allowed to be null
     dispatch({ type: "CHECK_IS_ADD_DISABLED" });
-  }, [
-    dispatch,
-    state.catScreen.dateOfBirth,
-    state.catScreen.image,
-    state.catScreen.name,
-  ]);
+  }, [dispatch, dateOfBirth, image, name]);
 
   const closeModal = useCallback(() => {
     dispatch({ type: "TOGGLE_ADD_CAT_SCREEN", toState: false });
@@ -50,10 +48,10 @@ const AddCatScreen = () => {
   const triggerMutation = () => {
     const payload: Cat = {
       id: new Date().getUTCMilliseconds(),
-      name: state.catScreen.name,
-      imagePath: state.catScreen.image,
-      dateOfBirth: state.catScreen.dateOfBirth,
-      dateOfDeath: state.catScreen.dateOfDeath,
+      name: name,
+      imagePath: image,
+      dateOfBirth: dateOfBirth,
+      dateOfDeath: dateOfDeath,
     };
     //clear data
     addCatMutation.reset();
@@ -66,7 +64,7 @@ const AddCatScreen = () => {
       mutationResult={addCatMutation}
       onClose={() => closeModal()}
       mutationButtonTitle="Add"
-      isMutationButtonDisabled={state.catScreen.isAddDisabled}
+      isMutationButtonDisabled={isAddDisabled}
       screenTitle="Add a new cat"
     />
   );

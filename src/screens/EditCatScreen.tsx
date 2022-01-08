@@ -10,6 +10,9 @@ import { CatScreen } from ".";
 const EditCatScreen = () => {
   const { state, dispatch } = useContext(StateContext);
 
+  const { name, image, dateOfBirth, dateOfDeath, isEditDisabled, selectedCat } =
+    state.catScreen;
+
   const queryClient = useQueryClient();
 
   const updateCatMutation = useMutation(
@@ -27,13 +30,7 @@ const EditCatScreen = () => {
   useEffect(() => {
     //check if component data and selected cat is the same
     dispatch({ type: "CHECK_IS_EDIT_DISABLED" });
-  }, [
-    dispatch,
-    state.catScreen.dateOfDeath,
-    state.catScreen.dateOfBirth,
-    state.catScreen.image,
-    state.catScreen.name,
-  ]);
+  }, [dispatch, dateOfDeath, dateOfBirth, image, name]);
 
   const closeModal = useCallback(() => {
     dispatch({ type: "TOGGLE_EDIT_CAT_SCREEN", toState: false });
@@ -50,15 +47,15 @@ const EditCatScreen = () => {
 
   const triggerMutation = () => {
     //null check
-    if (!state.catScreen.selectedCat?.id) {
+    if (!selectedCat?.id) {
       return;
     }
     const payload: Cat = {
-      id: state.catScreen.selectedCat.id,
-      name: state.catScreen.name,
-      imagePath: state.catScreen.image,
-      dateOfBirth: state.catScreen.dateOfBirth,
-      dateOfDeath: state.catScreen.dateOfDeath,
+      id: selectedCat.id,
+      name: name,
+      imagePath: image,
+      dateOfBirth: dateOfBirth,
+      dateOfDeath: dateOfDeath,
     };
     //clear data
     updateCatMutation.reset();
@@ -71,7 +68,7 @@ const EditCatScreen = () => {
       mutationResult={updateCatMutation}
       onClose={() => closeModal()}
       mutationButtonTitle="Confirm"
-      isMutationButtonDisabled={state.catScreen.isEditDisabled}
+      isMutationButtonDisabled={isEditDisabled}
       screenTitle="Edit cat"
     />
   );
