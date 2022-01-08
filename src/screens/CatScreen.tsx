@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 
 import {
   Button,
@@ -9,97 +9,31 @@ import {
   View,
 } from "react-native";
 
-import { useMutation, useQueryClient } from "react-query";
+import { UseMutationResult } from "react-query";
 
 import { StateContext } from "../store/stateContext";
-import { addCat, updateCat } from "../service/api";
 import { Cat, DatePickerType } from "../types";
 import { Colors, getSystemColor } from "../utils";
 import { AdaptableText, ImageCarousel, DateSelector } from "../components";
 
-const CatScreen = () => {
+const CatScreen = ({
+  triggerMutation,
+  mutationResult,
+  onClose,
+  mutationButtonTitle,
+  isMutationButtonDisabled,
+  screenTitle,
+}: {
+  triggerMutation: () => void;
+  mutationResult: UseMutationResult<void, unknown, Cat, unknown>;
+  onClose: () => void;
+  mutationButtonTitle: string;
+  isMutationButtonDisabled: boolean;
+  screenTitle: string;
+}) => {
   const { state, dispatch } = useContext(StateContext);
 
-  const queryClient = useQueryClient();
   const isDarkMode = useColorScheme() === "dark";
-
-  const addCatMutation = useMutation(
-    (cat: Cat) => {
-      return addCat(cat);
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("cats");
-      },
-    }
-  );
-
-  const updateCatMutation = useMutation(
-    (cat: Cat) => {
-      return updateCat(cat);
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("cats");
-      },
-    }
-  );
-
-  const catScreenTitle =
-    state.catScreen.type === "ADD" ? "Add a new cat" : `Edit cat`;
-
-  const mutationTriggerButtonText =
-    state.catScreen.type === "ADD" ? "Add" : "Confirm";
-
-  const dateOfBirthTitle = state.catScreen.dateOfBirth
-    ? state.catScreen.dateOfBirth.toDateString()
-    : "Date of birth";
-
-  const dateOfDeathTitle = state.catScreen.dateOfDeath
-    ? state.catScreen.dateOfDeath.toDateString()
-    : "Date of death";
-
-  useEffect(() => {
-    dispatch({ type: "CHECK_IS_ADD_DISABLED" });
-  }, [
-    dispatch,
-    state.catScreen.dateOfBirth,
-    state.catScreen.image,
-    state.catScreen.name,
-  ]);
-
-  const closeModal = useCallback(() => {
-    dispatch({ type: "TOGGLE_CATSCREEN", toState: false });
-    dispatch({ type: "RESET_CATSCREEN_STATE" });
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (addCatMutation.isSuccess || updateCatMutation.isSuccess) {
-      closeModal();
-      addCatMutation.reset();
-      updateCatMutation.reset();
-    }
-  }, [addCatMutation, updateCatMutation, closeModal]);
-
-  const triggerMutation = () => {
-    const payload: Cat = {
-      id: state.catScreen.catId ?? new Date().getUTCMilliseconds(),
-      name: state.catScreen.name,
-      imagePath: state.catScreen.image,
-      dateOfBirth: state.catScreen.dateOfBirth?.toDateString(),
-      dateOfDeath: state.catScreen.dateOfDeath?.toDateString(),
-    };
-
-    if (state.catScreen.type === "ADD") {
-      addCatMutation.reset();
-      addCatMutation.mutateAsync(payload);
-    }
-
-    if (state.catScreen.type === "EDIT") {
-      updateCatMutation.reset();
-      updateCatMutation.mutateAsync(payload);
-    }
-  };
 
   const selectImage = (image: string) => {
     dispatch({ type: "SELECT_CAT_IMAGE", image: image });
@@ -113,7 +47,7 @@ const CatScreen = () => {
     });
   };
 
-  const confirmDateSelector = (date: Date) => {
+  const confirmDateSelector = (date: string) => {
     dispatch({
       type: "SAVE_DATE",
       date: date,
@@ -133,12 +67,10 @@ const CatScreen = () => {
     <Modal
       animationType="slide"
       presentationStyle="pageSheet"
-      onRequestClose={() => closeModal()}>
+      onRequestClose={() => onClose()}>
       <View
         style={[{ backgroundColor: getSystemColor(isDarkMode) }, styles.modal]}>
-        <AdaptableText style={styles.modalTitle}>
-          {catScreenTitle}
-        </AdaptableText>
+        <AdaptableText style={styles.modalTitle}>{screenTitle}</AdaptableText>
 
         <View style={styles.inputContainer}>
           <View style={styles.carouselContainer}>
@@ -171,26 +103,26 @@ const CatScreen = () => {
               onOpen={type => openDateSelector(type)}
               onConfirm={date => confirmDateSelector(date)}
               onCancel={() => onCancelDateSelector()}
-              dateOfBirthTitle={dateOfBirthTitle}
-              dateOfDeathTitle={dateOfDeathTitle}
+              dateOfBirth={state.catScreen.dateOfBirth}
+              dateOfDeath={state.catScreen.dateOfDeath}
             />
           </View>
           <View style={styles.bottomInputContainer}>
-            {addCatMutation.isError && (
+            {mutationResult.isError && (
               <AdaptableText>Something went wrong, try again.</AdaptableText>
             )}
-            {addCatMutation.isLoading ? (
+            {mutationResult.isLoading ? (
               <AdaptableText>Loading...</AdaptableText>
             ) : (
               <>
                 <View style={styles.addButtonContainer}>
                   <Button
-                    disabled={state.catScreen.isAddDisabled}
+                    disabled={isMutationButtonDisabled}
                     onPress={() => triggerMutation()}
-                    title={mutationTriggerButtonText}
+                    title={mutationButtonTitle}
                   />
                 </View>
-                <Button onPress={() => closeModal()} title="Cancel" />
+                <Button onPress={() => onClose()} title="Cancel" />
               </>
             )}
           </View>

@@ -4,15 +4,15 @@ export const Colors = {
   gray: "#524f4e",
 };
 
-export const formatDate = (dateString: string | undefined) => {
+export const formatDate = (dateString: string) => {
   if (!dateString) {
     return "";
   }
   const date = new Date(dateString);
 
   const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDay();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
 
   return `${year}/${month}/${day}`;
 };

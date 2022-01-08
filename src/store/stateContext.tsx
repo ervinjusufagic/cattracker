@@ -4,18 +4,19 @@ import { catScreenReducer } from "./reducers";
 
 const initialState: InitialState = {
   catScreen: {
-    catId: null,
     name: "",
     image: "",
-    dateOfBirth: null,
-    dateOfDeath: null,
+    dateOfBirth: "",
+    dateOfDeath: "",
     isAddDisabled: true,
+    isEditDisabled: true,
+    isAddOpen: false,
+    isEditOpen: false,
+    selectedCat: null,
     datePicker: {
       open: false,
       type: null,
     },
-    isOpen: false,
-    type: null,
   },
 };
 
@@ -27,6 +28,7 @@ const StateContext = createContext<{
   dispatch: () => null,
 });
 
+// Add multiple reducers for different screens
 const mainReducer = ({ catScreen }: InitialState, action: Action) => ({
   catScreen: catScreenReducer(catScreen, action),
 });

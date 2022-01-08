@@ -18,7 +18,7 @@ import { fetchAllCats } from "../service/api";
 import { Colors, getSystemColor } from "../utils";
 import { Cat } from "../types";
 import { CatCell } from "../components";
-import { CatScreen, InformationScreen } from ".";
+import { EditCatScreen, InformationScreen, AddCatScreen } from ".";
 
 const HomeScreen = () => {
   const { state, dispatch } = useContext(StateContext);
@@ -29,14 +29,6 @@ const HomeScreen = () => {
     "cats",
     fetchAllCats
   );
-
-  const openCatScreen = (cat?: Cat) => {
-    dispatch({
-      type: "TOGGLE_CATSCREEN",
-      toState: true,
-      cat: cat,
-    });
-  };
 
   if (isLoading) {
     return <InformationScreen text="Loading..." />;
@@ -68,7 +60,13 @@ const HomeScreen = () => {
           <View style={styles.collectionView}>
             {data?.map((cat, index) => (
               <CatCell
-                onSelect={() => openCatScreen(cat)}
+                onSelect={() =>
+                  dispatch({
+                    type: "TOGGLE_EDIT_CAT_SCREEN",
+                    toState: true,
+                    selectedCat: cat,
+                  })
+                }
                 key={index}
                 cat={cat}
               />
@@ -82,10 +80,16 @@ const HomeScreen = () => {
           style={{ color: isDarkMode ? Colors.white : Colors.black }}
           placeholder="Search for a cat..."
         />
-        <Button title="Add a cat" onPress={() => openCatScreen()} />
+        <Button
+          title="Add a cat"
+          onPress={() =>
+            dispatch({ type: "TOGGLE_ADD_CAT_SCREEN", toState: true })
+          }
+        />
       </View>
 
-      {state.catScreen.isOpen && <CatScreen />}
+      {state.catScreen.isAddOpen && <AddCatScreen />}
+      {state.catScreen.isEditOpen && <EditCatScreen />}
     </SafeAreaView>
   );
 };

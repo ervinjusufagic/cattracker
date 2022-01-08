@@ -5,34 +5,30 @@ export const catScreenReducer = (
   action: Action
 ): CatScreenState => {
   switch (action.type) {
-    case "TOGGLE_CATSCREEN":
-      //if cat exists, we are in edit, populate cat data
-      const catInPayload = action.cat;
+    case "TOGGLE_ADD_CAT_SCREEN":
+      return {
+        ...state,
+        isAddOpen: action.toState,
+      };
 
-      if (catInPayload) {
-        let birth = catInPayload.dateOfBirth
-          ? new Date(catInPayload.dateOfBirth)
-          : null;
-        let death = catInPayload.dateOfDeath
-          ? new Date(catInPayload.dateOfDeath)
-          : null;
-
+    case "TOGGLE_EDIT_CAT_SCREEN":
+      const cat = action.selectedCat;
+      //null check
+      if (!cat) {
         return {
           ...state,
-          catId: catInPayload.id,
-          name: catInPayload.name,
-          image: catInPayload.imagePath,
-          dateOfBirth: birth,
-          dateOfDeath: death,
-          isOpen: action.toState,
-          type: "EDIT",
+          isEditOpen: false,
         };
       }
 
       return {
         ...state,
-        isOpen: action.toState,
-        type: action.toState ? "ADD" : null, // reset if its closing
+        selectedCat: cat,
+        name: cat.name,
+        image: cat.imagePath,
+        dateOfBirth: cat.dateOfBirth,
+        dateOfDeath: cat.dateOfDeath,
+        isEditOpen: action.toState,
       };
 
     case "TOGGLE_DATEPICKER":
@@ -64,21 +60,37 @@ export const catScreenReducer = (
       };
 
     case "CHECK_IS_ADD_DISABLED":
-      const { name, image, dateOfBirth } = state;
-      const isDisabled = name !== "" && image !== "" && dateOfBirth !== null;
+      // all but death needs to be filled
+      const isAddDisabled =
+        state.name !== "" && state.image !== "" && state.dateOfBirth !== null;
       return {
         ...state,
-        isAddDisabled: !isDisabled,
+        isAddDisabled: !isAddDisabled,
       };
 
-    case "RESET_CATSCREEN_STATE":
+    case "CHECK_IS_EDIT_DISABLED":
+      // check if component states are equal to selectedcat
+      const { dateOfDeath, selectedCat, name, image, dateOfBirth } = state;
+      const isEditDisabled =
+        name === selectedCat?.name &&
+        image === selectedCat.imagePath &&
+        dateOfBirth === selectedCat.dateOfBirth &&
+        dateOfDeath === selectedCat.dateOfDeath;
+      return {
+        ...state,
+        isEditDisabled: isEditDisabled,
+      };
+
+    case "RESET_CAT_SCREEN_STATE":
       return {
         ...state,
         name: "",
-        dateOfBirth: null,
-        dateOfDeath: null,
-        isAddDisabled: true,
         image: "",
+        dateOfBirth: "",
+        dateOfDeath: "",
+        isAddDisabled: true,
+        isEditDisabled: true,
+        selectedCat: null,
       };
 
     default:

@@ -8,25 +8,35 @@ const DateSelector = ({
   onOpen,
   onConfirm,
   onCancel,
-  dateOfBirthTitle,
-  dateOfDeathTitle,
+  dateOfBirth,
+  dateOfDeath,
   open,
 }: {
   onOpen: (type: DatePickerType) => void;
-  onConfirm: (date: Date) => void;
+  onConfirm: (date: string) => void;
   onCancel: () => void;
-  dateOfBirthTitle: string;
-  dateOfDeathTitle: string;
+  dateOfBirth: string;
+  dateOfDeath: string;
   open: boolean;
 }) => {
   const defaultDate = new Date();
 
+  const hasBirthDate = dateOfBirth !== "";
+  const hasDeathDate = dateOfDeath !== "";
+
+  const birthTitle = hasBirthDate
+    ? new Date(dateOfBirth).toDateString()
+    : "Date of birth";
+  const deathTitle = hasDeathDate
+    ? new Date(dateOfDeath).toDateString()
+    : "Date of death";
+
   return (
     <>
       <View style={styles.container}>
-        <Button onPress={() => onOpen("BIRTH")} title={dateOfBirthTitle} />
+        <Button onPress={() => onOpen("BIRTH")} title={birthTitle} />
         <AdaptableText>-</AdaptableText>
-        <Button onPress={() => onOpen("DEATH")} title={dateOfDeathTitle} />
+        <Button onPress={() => onOpen("DEATH")} title={deathTitle} />
       </View>
 
       <DatePicker
@@ -35,7 +45,7 @@ const DateSelector = ({
         date={defaultDate}
         maximumDate={defaultDate}
         mode="date"
-        onConfirm={date => onConfirm(date)}
+        onConfirm={date => onConfirm(date.toJSON())}
         onCancel={() => onCancel()}
       />
     </>
