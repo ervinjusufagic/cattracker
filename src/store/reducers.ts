@@ -1,4 +1,32 @@
-import { Action, CatScreenState } from "../types";
+import { Action, CatScreenState, HomeScreenState } from "../types";
+
+export const homeScreenReducer = (
+  state: HomeScreenState,
+  action: Action
+): HomeScreenState => {
+  switch (action.type) {
+    case "STORE_CATS":
+      return {
+        ...state,
+        cats: action.cats,
+      };
+
+    case "UPDATE_SEARCH_QUERY":
+      return {
+        ...state,
+        searchQuery: action.query,
+      };
+
+    case "FILTER_CATS":
+      return {
+        ...state,
+        cats: state.cats.filter(cat => cat.name.includes(action.query)),
+      };
+
+    default:
+      return state;
+  }
+};
 
 export const catScreenReducer = (
   state: CatScreenState,

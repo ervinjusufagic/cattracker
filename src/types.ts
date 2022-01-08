@@ -11,7 +11,13 @@ export type DatePickerType = "BIRTH" | "DEATH" | null;
 
 // State
 export type InitialState = {
+  homeScreen: HomeScreenState;
   catScreen: CatScreenState;
+};
+
+export type HomeScreenState = {
+  searchQuery: string;
+  cats: Cat[];
 };
 
 export type CatScreenState = {
@@ -34,6 +40,11 @@ export type DatePickerState = {
 
 // Actions
 
+export type HomeScreenAction =
+  | { type: "UPDATE_SEARCH_QUERY"; query: string }
+  | { type: "FILTER_CATS"; query: string }
+  | { type: "STORE_CATS"; cats: Cat[] };
+
 export type AddCatAction =
   | { type: "CHECK_IS_ADD_DISABLED" }
   | { type: "TOGGLE_ADD_CAT_SCREEN"; toState: boolean };
@@ -53,4 +64,8 @@ export type CatScreenAction =
   | { type: "SET_NAME"; name: string }
   | { type: "RESET_CAT_SCREEN_STATE" };
 
-export type Action = CatScreenAction | AddCatAction | EditCatAction;
+export type Action =
+  | CatScreenAction
+  | AddCatAction
+  | EditCatAction
+  | HomeScreenAction;

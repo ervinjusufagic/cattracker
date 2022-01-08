@@ -1,8 +1,12 @@
 import React, { createContext, useReducer } from "react";
 import { Action, InitialState } from "../types";
-import { catScreenReducer } from "./reducers";
+import { catScreenReducer, homeScreenReducer } from "./reducers";
 
 const initialState: InitialState = {
+  homeScreen: {
+    searchQuery: "",
+    cats: [],
+  },
   catScreen: {
     name: "",
     image: "",
@@ -29,7 +33,11 @@ const StateContext = createContext<{
 });
 
 // Add multiple reducers for different screens
-const mainReducer = ({ catScreen }: InitialState, action: Action) => ({
+const mainReducer = (
+  { homeScreen, catScreen }: InitialState,
+  action: Action
+) => ({
+  homeScreen: homeScreenReducer(homeScreen, action),
   catScreen: catScreenReducer(catScreen, action),
 });
 

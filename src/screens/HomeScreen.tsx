@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 
 import {
   Button,
@@ -29,6 +29,38 @@ const HomeScreen = () => {
     fetchAllCats
   );
 
+  const { cats, searchQuery } = state.homeScreen;
+
+  const storeCats = useCallback(() => {
+    if (data) {
+      dispatch({ type: "STORE_CATS", cats: data });
+    }
+  }, [dispatch, data]);
+
+  // store cats
+  useEffect(() => {
+    storeCats();
+  }, [data, storeCats]);
+
+  // search for cats
+  useEffect(() => {
+    // simple search for name with min 2 chars
+    if (searchQuery !== "" && searchQuery.length > 1) {
+      dispatch({ type: "FILTER_CATS", query: searchQuery });
+    } else {
+      // reset cats
+      storeCats();
+    }
+  }, [dispatch, searchQuery, storeCats]);
+
+  const onSelectCollectionViewItem = (cat: Cat) => {
+    dispatch({
+      type: "TOGGLE_EDIT_CAT_SCREEN",
+      toState: true,
+      selectedCat: cat,
+    });
+  };
+
   if (isLoading) {
     return <InformationScreen text="Loading..." />;
   }
@@ -39,14 +71,6 @@ const HomeScreen = () => {
     );
   }
 
-  const onSelectCollectionViewItem = (cat: Cat) => {
-    dispatch({
-      type: "TOGGLE_EDIT_CAT_SCREEN",
-      toState: true,
-      selectedCat: cat,
-    });
-  };
-
   return (
     <SafeAreaView
       style={[
@@ -55,10 +79,10 @@ const HomeScreen = () => {
       ]}>
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
 
-      {data ? (
-        <CollectionView data={data} onSelectItem={onSelectCollectionViewItem} />
+      {cats.length > 0 ? (
+        <CollectionView data={cats} onSelectItem={onSelectCollectionViewItem} />
       ) : (
-        <InformationScreen text="No cats found" />
+        <InformationScreen text="No cats found :(" />
       )}
 
       <View style={styles.actionMenu}>
@@ -66,6 +90,10 @@ const HomeScreen = () => {
           placeholderTextColor={Colors.gray}
           style={{ color: isDarkMode ? Colors.white : Colors.black }}
           placeholder="Search for a cat..."
+          value={searchQuery}
+          onChangeText={text =>
+            dispatch({ type: "UPDATE_SEARCH_QUERY", query: text })
+          }
         />
         <Button
           title="Add a cat"
