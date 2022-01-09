@@ -91,7 +91,7 @@ test("homescreen renders while loading", () => {
   expect(component.getByText("Loading...")).toBeDefined();
 });
 
-test("homescreen render while error", () => {
+test("homescreen renders while error", () => {
   useFetchCatsMock.mockImplementation(() => ({
     ...initialUseFetchCatsResult,
     isError: true,
@@ -102,7 +102,7 @@ test("homescreen render while error", () => {
   expect(component.getByText("Could not fetch cats :(")).toBeDefined();
 });
 
-test("homescreen render with data", async () => {
+test("homescreen renders with data", async () => {
   const cat: Cat = {
     name: "TestCat",
     dateOfBirth: "",
