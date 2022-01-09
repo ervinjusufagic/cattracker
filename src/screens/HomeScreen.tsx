@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import {
   Button,
@@ -10,48 +10,32 @@ import {
   View,
 } from "react-native";
 
-import { useQuery } from "react-query";
-
-import { StateContext } from "../store/stateContext";
-import { fetchAllCats } from "../service/api";
 import { Colors, getSystemColor } from "../utils";
 import { Cat } from "../types";
 import { CollectionView } from "../components";
 import { EditCatScreen, InformationScreen, AddCatScreen } from ".";
+import { useFetchCats } from "../hooks/useFetchCats";
+import { useStateReducer } from "../hooks";
 
 const HomeScreen = () => {
-  const { state, dispatch } = useContext(StateContext);
-
   const isDarkMode = useColorScheme() === "dark";
 
-  const { isLoading, isError, error, data } = useQuery<Cat[], Error>(
-    "cats",
-    fetchAllCats
-  );
+  const { state, dispatch } = useStateReducer();
+  const { isLoading, isError, error, data } = useFetchCats();
 
   const { cats, searchQuery } = state.homeScreen;
 
-  const storeCats = useCallback(() => {
-    if (data) {
-      dispatch({ type: "STORE_CATS", cats: data });
-    }
-  }, [dispatch, data]);
-
-  // store cats
-  useEffect(() => {
-    storeCats();
-  }, [data, storeCats]);
-
-  // search for cats
   useEffect(() => {
     // simple search for name with min 2 chars
     if (searchQuery !== "" && searchQuery.length > 1) {
       dispatch({ type: "FILTER_CATS", query: searchQuery });
     } else {
-      // reset cats
-      storeCats();
+      // store / reset cats
+      if (data) {
+        dispatch({ type: "STORE_CATS", cats: data });
+      }
     }
-  }, [dispatch, searchQuery, storeCats]);
+  }, [dispatch, searchQuery, data]);
 
   const onSelectCollectionViewItem = (cat: Cat) => {
     dispatch({
@@ -96,6 +80,7 @@ const HomeScreen = () => {
           }
         />
         <Button
+          accessibilityLabel="Add a cat"
           title="Add a cat"
           onPress={() =>
             dispatch({ type: "TOGGLE_ADD_CAT_SCREEN", toState: true })

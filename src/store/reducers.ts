@@ -90,7 +90,7 @@ export const catScreenReducer = (
     case "CHECK_IS_ADD_DISABLED":
       // all but death needs to be filled
       const isAddDisabled =
-        state.name !== "" && state.image !== "" && state.dateOfBirth !== null;
+        state.name !== "" && state.image !== "" && state.dateOfBirth !== "";
       return {
         ...state,
         isAddDisabled: !isAddDisabled,

@@ -1,31 +1,15 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 
-import { useMutation, useQueryClient } from "react-query";
-
-import { StateContext } from "../store/stateContext";
-import { updateCat } from "../service/api";
 import { Cat } from "../types";
 import { CatScreen } from ".";
+import { useStateReducer, useUpdateCatMutation } from "../hooks";
 
 const EditCatScreen = () => {
-  const { state, dispatch } = useContext(StateContext);
+  const { state, dispatch } = useStateReducer();
+  const updateCatMutation = useUpdateCatMutation();
 
   const { name, image, dateOfBirth, dateOfDeath, isEditDisabled, selectedCat } =
     state.catScreen;
-
-  const queryClient = useQueryClient();
-
-  const updateCatMutation = useMutation(
-    (cat: Cat) => {
-      return updateCat(cat);
-    },
-    {
-      onSuccess: () => {
-        //refetch cats
-        queryClient.invalidateQueries("cats");
-      },
-    }
-  );
 
   useEffect(() => {
     //check if component data and selected cat is the same

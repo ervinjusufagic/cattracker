@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import {
   Button,
@@ -11,10 +11,10 @@ import {
 
 import { UseMutationResult } from "react-query";
 
-import { StateContext } from "../store/stateContext";
 import { Cat, DatePickerType } from "../types";
 import { Colors, getSystemColor } from "../utils";
 import { AdaptableText, ImageCarousel, DateSelector } from "../components";
+import { useStateReducer } from "../hooks";
 
 const CatScreen = ({
   triggerMutation,
@@ -31,11 +31,10 @@ const CatScreen = ({
   isMutationButtonDisabled: boolean;
   screenTitle: string;
 }) => {
-  const { state, dispatch } = useContext(StateContext);
+  const isDarkMode = useColorScheme() === "dark";
+  const { state, dispatch } = useStateReducer();
 
   const { datePicker, image, name, dateOfBirth, dateOfDeath } = state.catScreen;
-
-  const isDarkMode = useColorScheme() === "dark";
 
   const selectImage = (selectedImage: string) => {
     dispatch({ type: "SELECT_CAT_IMAGE", image: selectedImage });

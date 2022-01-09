@@ -1,31 +1,15 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 
-import { useMutation, useQueryClient } from "react-query";
-
-import { StateContext } from "../store/stateContext";
-import { addCat } from "../service/api";
 import { Cat } from "../types";
 import { CatScreen } from ".";
+import { useAddCatMutation, useStateReducer } from "../hooks";
 
 const AddCatScreen = () => {
-  const { state, dispatch } = useContext(StateContext);
+  const { state, dispatch } = useStateReducer();
+  const addCatMutation = useAddCatMutation();
 
   const { name, image, dateOfBirth, dateOfDeath, isAddDisabled } =
     state.catScreen;
-
-  const queryClient = useQueryClient();
-
-  const addCatMutation = useMutation(
-    (cat: Cat) => {
-      return addCat(cat);
-    },
-    {
-      onSuccess: () => {
-        //refetch cats
-        queryClient.invalidateQueries("cats");
-      },
-    }
-  );
 
   useEffect(() => {
     // death is allowed to be null
