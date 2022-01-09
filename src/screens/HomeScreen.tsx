@@ -13,7 +13,7 @@ import {
 import { Colors, getSystemColor } from "../utils";
 import { Cat } from "../types";
 import { CollectionView } from "../components";
-import { EditCatScreen, InformationScreen, AddCatScreen } from ".";
+import { EditCatScreen, UserInformationScreen, AddCatScreen } from ".";
 import { useFetchCats } from "../hooks/useFetchCats";
 import { useStateReducer } from "../hooks";
 
@@ -46,12 +46,14 @@ const HomeScreen = () => {
   };
 
   if (isLoading) {
-    return <InformationScreen text="Loading..." />;
+    return <UserInformationScreen text="Loading..." />;
   }
 
   if (isError) {
     return (
-      <InformationScreen text={error?.message ?? "Could not fetch cats :("} />
+      <UserInformationScreen
+        text={error?.message ?? "Could not fetch cats :("}
+      />
     );
   }
 
@@ -66,7 +68,7 @@ const HomeScreen = () => {
       {cats.length > 0 ? (
         <CollectionView data={cats} onSelectItem={onSelectCollectionViewItem} />
       ) : (
-        <InformationScreen text="No cats found :(" />
+        <UserInformationScreen text="No cats found :(" />
       )}
 
       <View style={styles.actionMenu}>

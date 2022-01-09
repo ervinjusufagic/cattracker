@@ -4,7 +4,7 @@ import { StyleSheet, useColorScheme, View } from "react-native";
 import { AdaptableText } from "../components";
 import { getSystemColor } from "../utils";
 
-const InformationScreen = ({ text }: { text: string }) => {
+const UserInformationScreen = ({ text }: { text: string }) => {
   const isDarkMode = useColorScheme() === "dark";
 
   return (
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { InformationScreen };
+export { UserInformationScreen };

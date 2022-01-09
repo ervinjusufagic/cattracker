@@ -1,4 +1,4 @@
-export * from "./InformationScreen";
+export * from "./UserInformationScreen";
 export * from "./EditCatScreen";
 export * from "./AddCatScreen";
 export * from "./HomeScreen";
