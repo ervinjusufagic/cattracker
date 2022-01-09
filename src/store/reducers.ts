@@ -20,7 +20,9 @@ export const homeScreenReducer = (
     case "FILTER_CATS":
       return {
         ...state,
-        cats: state.cats.filter(cat => cat.name.includes(action.query)),
+        cats: state.cats.filter(cat =>
+          cat.name.toLowerCase().includes(action.query.toLowerCase())
+        ),
       };
 
     default:
